@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MFS VEXORA — The Future of Shopping</title>
+<meta name="description" content="MFS VEXORA. Discover More. Experience Better.">
+<meta name="theme-color" content="#07050d">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="intro" aria-hidden="true"><span>MFS VEXORA</span></div>
+
+<header class="top">
+  <a class="brand" href="./">MFS VEXORA</a>
+  <form id="searchForm" role="search"><input id="q" type="search" placeholder="Search products" aria-label="Search products"></form>
+  <button id="wishBtn" class="ghost" aria-pressed="false" type="button">♡ <span>Wishlist</span> <b id="wishCount">0</b></button>
+</header>
+
+<main>
+  <section class="hero">
+    <h1>THE FUTURE OF SHOPPING</h1>
+    <p>Discover More. Experience Better.</p>
+    <a class="btn" href="#shop">Browse products</a>
+  </section>
+
+  <section id="featuredSec" hidden>
+    <h2>Featured</h2>
+    <div id="featured" class="grid"></div>
+  </section>
+
+  <section id="shop">
+    <div class="bar">
+      <h2 id="shopTitle">All products</h2>
+      <select id="cat" aria-label="Filter by category"><option value="">All categories</option></select>
+      <select id="sort" aria-label="Sort products">
+        <option value="new">Newest first</option>
+        <option value="low">Price: low to high</option>
+        <option value="high">Price: high to low</option>
+      </select>
+    </div>
+    <div id="grid" class="grid"></div>
+    <div id="state"></div>
+  </section>
+
+  <section id="recentSec" hidden>
+    <h2>Recently viewed</h2>
+    <div id="recent" class="grid"></div>
+  </section>
+</main>
+
+<footer>© MFS VEXORA</footer>
+<dialog id="detail" aria-label="Product details"></dialog>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

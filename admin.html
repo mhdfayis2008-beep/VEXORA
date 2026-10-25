@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>MFS VEXORA Admin</title>
+<script>window.__rec = /type=recovery/.test(location.hash + location.search);</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+<p id="setupWarn" class="banner" hidden>config.js still contains the placeholder values. Add your Supabase Project URL and publishable key, then reload.</p>
+
+<!-- Sign in -->
+<section id="auth" class="authwrap">
+  <div class="glass authbox">
+    <h1 class="brand">MFS VEXORA</h1>
+    <p class="muted">Administrator sign in</p>
+
+    <form id="loginForm">
+      <label>Email<input name="email" type="email" autocomplete="username" required></label>
+      <label>Password<input name="password" type="password" autocomplete="current-password" required></label>
+      <button class="btn" type="submit">Log in</button>
+      <button class="linkbtn" type="button" data-show="forgot">Forgot password?</button>
+    </form>
+
+    <form id="forgotForm" hidden>
+      <label>Admin email<input name="email" type="email" autocomplete="username" required></label>
+      <button class="btn" type="submit">Send reset link</button>
+      <button class="linkbtn" type="button" data-show="login">Back to log in</button>
+    </form>
+
+    <form id="resetForm" hidden>
+      <label>New password (8+ characters)<input name="pw" type="password" minlength="8" autocomplete="new-password" required></label>
+      <label>Repeat new password<input name="pw2" type="password" minlength="8" autocomplete="new-password" required></label>
+      <button class="btn" type="submit">Save new password</button>
+    </form>
+
+    <p id="authMsg" class="msg" role="alert"></p>
+  </div>
+</section>
+
+<!-- Dashboard -->
+<div id="app" hidden>
+  <header class="atop">
+    <button id="menuBtn" class="ghost" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav">☰</button>
+    <strong class="brand">VEXORA Admin</strong>
+    <span id="conn" class="pill">Checking…</span>
+    <button id="addTop" class="btn" type="button">+ Add Product</button>
+  </header>
+
+  <div class="shell">
+    <nav id="nav" aria-label="Admin sections">
+      <button type="button" data-view="overview" class="ghost">Overview</button>
+      <button type="button" data-view="products" class="ghost">Products</button>
+      <button type="button" data-view="cats" class="ghost">Categories</button>
+      <a class="ghost" href="./" target="_blank" rel="noopener">View store</a>
+      <button id="logout" type="button" class="ghost danger">Log out</button>
+    </nav>
+
+    <main>
+      <section id="v-overview" class="view">
+        <h2>Overview</h2>
+        <div class="stats">
+          <div class="glass stat"><b id="sPub">–</b><span>Published products</span></div>
+          <div class="glass stat"><b id="sDraft">–</b><span>Unpublished products</span></div>
+          <div class="glass stat"><b id="sCats">–</b><span>Categories</span></div>
+          <div class="glass stat"><b id="sConn">–</b><span>Database</span></div>
+        </div>
+        <h3>Recently added</h3>
+        <ul id="recentList" class="rlist"></ul>
+      </section>
+
+      <section id="v-products" class="view" hidden>
+        <div class="row">
+          <h2>Products</h2>
+          <select id="fcat" aria-label="Filter by category"><option value="">All categories</option></select>
+          <button class="btn" type="button" data-add>+ Add Product</button>
+        </div>
+        <div class="tablewrap">
+          <table id="ptable">
+            <thead><tr><th>Image</th><th>Name</th><th>Price</th><th>Category</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div id="pempty" class="empty" hidden><h3>No products here yet</h3><p class="muted">Add your first product to see it in this list.</p></div>
+      </section>
+
+      <section id="v-cats" class="view" hidden>
+        <h2>Categories</h2>
+        <form id="catForm" class="row">
+          <input id="newCat" placeholder="New category name" maxlength="60" required aria-label="New category name">
+          <button class="btn" type="submit">Add category</button>
+        </form>
+        <ul id="catList" class="rlist"></ul>
+      </section>
+    </main>
+  </div>
+
+  <button id="fab" class="btn fab" type="button" data-add aria-label="Add product">+ Add Product</button>
+</div>
+
+<!-- Product form -->
+<dialog id="pform">
+  <form id="pf" novalidate>
+    <h2 id="pfTitle">Add product</h2>
+    <input type="hidden" id="fId">
+    <label>Product image
+      <input id="fImg" type="file" accept="image/jpeg,image/png,image/webp">
+    </label>
+    <img id="fPrev" class="preview" alt="Selected image preview" hidden>
+    <label>Product name<input id="fName" maxlength="120" required></label>
+    <div class="two">
+      <label>Price (₹)<input id="fPrice" type="number" inputmode="decimal" min="0" step="0.01" required></label>
+      <label>Sale price (₹, optional)<input id="fSale" type="number" inputmode="decimal" min="0" step="0.01"></label>
+    </div>
+    <label>Category<select id="fCat" required></select></label>
+    <label>Description<textarea id="fDesc" maxlength="2000"></textarea></label>
+    <label>Buy Now link<input id="fUrl" type="url" inputmode="url" placeholder="https://" required></label>
+    <label class="check"><input id="fPub" type="checkbox"> Publish on the storefront</label>
+    <div id="prev" class="glass previewcard" hidden></div>
+    <p id="ferr" class="msg err" role="alert"></p>
+    <div class="actions">
+      <button id="btnPrev" class="ghost" type="button">Preview</button>
+      <button id="btnSave" class="btn" type="submit">Save product</button>
+      <button id="btnCancel" class="ghost" type="button">Cancel</button>
+    </div>
+  </form>
+</dialog>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>
